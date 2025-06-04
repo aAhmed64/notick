@@ -1,0 +1,1 @@
+TEST JOURNALS: Invoke-RestMethod -Uri http://127.0.0.1:5000/api/journals -Method POST -Body '{"title": "My New Entry", "content": "Learning Flask is fun!"}' -ContentType "application/json"
