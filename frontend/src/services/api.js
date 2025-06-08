@@ -1,8 +1,8 @@
-const API_BASE_URL = "https://7822-217-54-58-159.ngrok-free.app"; 
+const API_BASE_URL = "https://7822-217-54-58-159.ngrok-free.app/api/journals";
 
 export async function getJournals() {
   try {
-    const res = await fetch(API_BASE_URL);
+    const res = await fetch(API_BASE_URL);  // GET all journals
     if (!res.ok) throw new Error('Network response was not ok');
     return await res.json();
   } catch (error) {
@@ -21,7 +21,7 @@ export async function createJournal(data) {
 }
 
 export async function updateJournal(id, data) {
-  const res = await fetch(`${API_BASE_URL}/${id}`, {
+  const res = await fetch(`${API_BASE_URL}/${id}`, {  // PUT /api/journals/:id
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
@@ -30,8 +30,9 @@ export async function updateJournal(id, data) {
 }
 
 export async function deleteJournal(id) {
-  const res = await fetch(`${API_BASE_URL}/${id}`, {
+  const res = await fetch(`${API_BASE_URL}/${id}`, {  // DELETE /api/journals/:id
     method: 'DELETE',
   });
   return res.json();
 }
+
