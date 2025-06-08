@@ -17,7 +17,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 CORS(app, origins=[
     "http://localhost:5173",
     "https://notick-silk.vercel.app",
-    "https://55d1-154-236-11-112.ngrok-free.app"
+    "https://*.vercel.app",  # Allow all Vercel preview deployments
+    "https://*.ngrok-free.app"  # Allow all ngrok URLs
 ])
 
 
