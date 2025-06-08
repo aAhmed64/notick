@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://c056-154-236-11-112.ngrok-free.app";
+const API_BASE_URL = "https://c056-154-236-11-112.ngrok-free.app/api/journals";
 
 const handleResponse = async (response) => {
   if (!response.ok) {
