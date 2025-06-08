@@ -15,6 +15,7 @@ const fetchWithConfig = async (url, options = {}) => {
       'Content-Type': 'application/json',
       ...options.headers,
     },
+    mode: 'cors',
     credentials: 'include',
   };
   return fetch(url, config);
@@ -22,6 +23,7 @@ const fetchWithConfig = async (url, options = {}) => {
 
 export async function getJournals() {
   try {
+    console.log('Fetching from:', API_BASE_URL); // Debug log
     const res = await fetchWithConfig(API_BASE_URL);
     return await handleResponse(res);
   } catch (error) {
@@ -32,6 +34,7 @@ export async function getJournals() {
 
 export async function createJournal(data) {
   try {
+    console.log('Creating journal at:', API_BASE_URL); // Debug log
     const res = await fetchWithConfig(API_BASE_URL, {
       method: 'POST',
       body: JSON.stringify(data),
@@ -45,6 +48,7 @@ export async function createJournal(data) {
 
 export async function updateJournal(id, data) {
   try {
+    console.log('Updating journal at:', `${API_BASE_URL}/${id}`); // Debug log
     const res = await fetchWithConfig(`${API_BASE_URL}/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
@@ -58,6 +62,7 @@ export async function updateJournal(id, data) {
 
 export async function deleteJournal(id) {
   try {
+    console.log('Deleting journal at:', `${API_BASE_URL}/${id}`); // Debug log
     const res = await fetchWithConfig(`${API_BASE_URL}/${id}`, {
       method: 'DELETE',
     });
