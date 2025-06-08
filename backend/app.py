@@ -14,13 +14,17 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-CORS(app, origins=[
-    "http://localhost:5173",
-    "https://notick-silk.vercel.app",
-    "https://*.vercel.app",  # Allow all Vercel preview deployments
-    "https://*.ngrok-free.app"  # Allow all ngrok URLs
-])
-
+# Configure CORS
+CORS(app, 
+     origins=[
+         "http://localhost:5173",
+         "https://notick-silk.vercel.app",
+         "https://*.vercel.app",
+         "https://*.ngrok-free.app"
+     ],
+     supports_credentials=True,
+     methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+     allow_headers=["Content-Type", "Authorization"])
 
 # Initialize extensions
 db.init_app(app)

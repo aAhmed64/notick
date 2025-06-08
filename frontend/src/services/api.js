@@ -8,9 +8,21 @@ const handleResponse = async (response) => {
   return response.json();
 };
 
+const fetchWithConfig = async (url, options = {}) => {
+  const config = {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+    credentials: 'include',
+  };
+  return fetch(url, config);
+};
+
 export async function getJournals() {
   try {
-    const res = await fetch(API_BASE_URL);
+    const res = await fetchWithConfig(API_BASE_URL);
     return await handleResponse(res);
   } catch (error) {
     console.error('Fetch error:', error);
@@ -20,9 +32,8 @@ export async function getJournals() {
 
 export async function createJournal(data) {
   try {
-    const res = await fetch(API_BASE_URL, {
+    const res = await fetchWithConfig(API_BASE_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
     return await handleResponse(res);
@@ -34,9 +45,8 @@ export async function createJournal(data) {
 
 export async function updateJournal(id, data) {
   try {
-    const res = await fetch(`${API_BASE_URL}/${id}`, {
+    const res = await fetchWithConfig(`${API_BASE_URL}/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
     return await handleResponse(res);
@@ -48,7 +58,7 @@ export async function updateJournal(id, data) {
 
 export async function deleteJournal(id) {
   try {
-    const res = await fetch(`${API_BASE_URL}/${id}`, {
+    const res = await fetchWithConfig(`${API_BASE_URL}/${id}`, {
       method: 'DELETE',
     });
     return await handleResponse(res);
