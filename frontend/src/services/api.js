@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://7822-217-54-58-159.ngrok-free.app/api/journals";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export async function getJournals() {
   try {

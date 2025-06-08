@@ -14,7 +14,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-CORS(app, origins=["http://localhost:5173", "https://your-vercel-project-name.vercel.app"])
+CORS(app, origins=["http://localhost:5173", "https://notick-silk.vercel.app"])
 
 # Initialize extensions
 db.init_app(app)
