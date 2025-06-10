@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "vite": "^6.3.5"
+  },
+  "dependencies": {
+    "react-quill": "^0.0.2"
   }
 }

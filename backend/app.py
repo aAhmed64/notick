@@ -2,16 +2,18 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from routes.main_routes import main_bp
-from models import db  # Make sure `db = SQLAlchemy()` is in models.py
+from routes.auth_routes import auth_bp
+from models import db
 import os
 from dotenv import load_dotenv
-load_dotenv()
 
+load_dotenv()
 
 app = Flask(__name__)
 
 # Database configuration: use PostgreSQL from Neon via .env
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
+app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Configure CORS
@@ -33,6 +35,7 @@ db.init_app(app)
 
 # Register Blueprints
 app.register_blueprint(main_bp)
+app.register_blueprint(auth_bp)
 
 # Create tables (run once or conditionally)
 with app.app_context():
@@ -41,3 +44,4 @@ with app.app_context():
 # Run the app
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
+
