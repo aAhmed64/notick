@@ -38,9 +38,12 @@ Notick – is an AI-powered journaling app where you can take notes and brainsto
 ## ⚙️ Getting Started
 
 ### Frontend Setup
+
+```bash
 cd frontend
 npm install
 npm run dev
+```
 
 ### Backend Setup
 
@@ -50,5 +53,6 @@ python -m venv venv
 source venv/bin/activate  # On Windows use `venv\Scripts\activate`
 pip install -r requirements.txt
 python app.py
+```
 
 
