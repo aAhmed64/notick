@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL || 'https://notick.onrender.com';
 const handleResponse = async (response) => {
   if (!response.ok) {
     // This is a robust way to get the error message from the server's JSON response

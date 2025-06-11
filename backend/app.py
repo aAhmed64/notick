@@ -28,7 +28,8 @@ CORS(app,
      origins=[
          "http://localhost:5173",
          "https://notick-silk.vercel.app",
-         "https://ba6f-154-236-138-220.ngrok-free.app"
+         "https://notick.onrender.com",
+         "https://notick-frontend.onrender.com"
      ],
      supports_credentials=True,
      methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
