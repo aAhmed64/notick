@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
-import Editor from './components/editor';
+import Editor from './components/Editor';
 import AuthPage from './components/authpage';
 import {
   getCurrentUser,
@@ -18,6 +19,8 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const initialize = async () => {
       try {
@@ -26,6 +29,7 @@ const App = () => {
           setUser(userData.user);
           const data = await getJournals();
           setNotes(data);
+          if (data.length > 0) setSelectedNoteId(data[0].id);
         }
       } catch (err) {
         console.error('Initialization error:', err);
@@ -51,17 +55,19 @@ const App = () => {
     }
   };
 
-  const handleNewAIConversation = () => {
-    const newNote = {
-      id: Date.now(),
-      title: 'New AI Chat',
-      description: 'Start a new conversation with AI',
-      content: '',
-      type: 'ai',
-      createdAt: new Date().toISOString()
-    };
-    setNotes(prev => [newNote, ...prev]);
-    setSelectedNoteId(newNote.id);
+  const handleNewAIConversation = async () => {
+    try {
+      const newNote = await createJournal({
+        title: 'New AI Chat',
+        description: 'Start a new conversation with AI',
+        content: '',
+        type: 'ai'
+      });
+      setNotes(prev => [newNote, ...prev]);
+      setSelectedNoteId(newNote.id);
+    } catch (err) {
+      console.error("Failed to create AI conversation:", err);
+    }
   };
 
   const handleNoteSelect = (noteId) => {
@@ -76,11 +82,15 @@ const App = () => {
     );
   };
 
-  const handleAuthSuccess = async (userData) => {
+  const handleAuthSuccess = async (authResponse) => {
     try {
-      setUser(userData.user); // Must call this first to show sidebar/editor
+      localStorage.setItem("token", authResponse.access_token);
+      const userData = await getCurrentUser();
+      setUser(userData.user);
       const data = await getJournals();
       setNotes(data);
+      if (data.length > 0) setSelectedNoteId(data[0].id);
+      navigate("/"); // Optional if you're using routes
     } catch (err) {
       console.error('Failed to fetch notes after login:', err);
       setError('Failed to load notes');
@@ -90,11 +100,13 @@ const App = () => {
   const handleSignOut = async () => {
     try {
       await logout();
+      localStorage.removeItem("token");
       setUser(null);
       setNotes([]);
       setSelectedNoteId(null);
-    } catch (error) {
-      console.error('Logout failed:', error);
+      navigate("/");
+    } catch (err) {
+      console.error('Logout failed:', err);
       setError('Failed to sign out. Please try again.');
     }
   };

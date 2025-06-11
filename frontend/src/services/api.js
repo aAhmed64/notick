@@ -1,5 +1,4 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-
 const handleResponse = async (response) => {
   if (!response.ok) {
     // This is a robust way to get the error message from the server's JSON response
@@ -11,17 +10,20 @@ const handleResponse = async (response) => {
 };
 
 const fetchWithConfig = async (url, options = {}) => {
+  const token = localStorage.getItem("token");
+
   const config = {
     ...options,
     headers: {
       'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options.headers,
     },
-    mode: 'cors',
-    credentials: 'include', // Important for sessions/cookies
   };
+
   return fetch(url, config);
 };
+
 
 export async function getJournals() {
   try {
@@ -84,8 +86,18 @@ export const login = async (credentials) => {
     method: 'POST',
     body: JSON.stringify(credentials),
   });
-  return handleResponse(response);
+
+  const data = await handleResponse(response);
+
+  if (data.token) {
+    localStorage.setItem("token", data.token);
+  }
+
+  return data;
 };
+
+
+
 
 export const register = async (userData) => {
   const response = await fetchWithConfig(`${API_URL}/api/register`, {
@@ -102,7 +114,40 @@ export const logout = async () => {
   return handleResponse(response);
 };
 
+
 export const getCurrentUser = async () => {
-  const response = await fetchWithConfig(`${API_URL}/api/me`);
-  return handleResponse(response);
+  const token = localStorage.getItem("token");
+  console.log('Fetching current user with token:', token ? 'Token exists' : 'No token');
+  console.log('API URL:', API_URL);
+
+  try {
+    const res = await fetch(`${API_URL}/api/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    console.log('Response status:', res.status);
+    console.log('Response headers:', Object.fromEntries(res.headers.entries()));
+    
+    const text = await res.text();
+    console.log('Response text:', text);
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch current user: ${res.status} ${text}`);
+    }
+
+    try {
+      return JSON.parse(text);
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError);
+      console.error('Response that failed to parse:', text);
+      throw new Error('Invalid JSON response from server');
+    }
+  } catch (error) {
+    console.error('getCurrentUser error:', error);
+    throw error;
+  }
 };

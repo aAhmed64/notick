@@ -74,20 +74,30 @@ const Editor = ({ note, onNoteUpdate }) => {
   return (
     <div className="editor h-screen w-full bg-[#1e1e1e] text-white overflow-y-auto relative border-0 p-0 m-0">
       <div className="metadata-section p-4">
-        <input
-          type="text"
-          className="title-input w-full bg-[#1e1e1e] text-gray-100 text-xl font-bold mb-1 p-2 focus:outline-none focus:ring-0 focus:border-transparent"
-          placeholder="Enter title here..."
-          value={note?.title || ''}
-          onChange={(e) => onNoteUpdate({ ...note, title: e.target.value })}
-        />
-        <input
-          type="text"
-          className="description-input w-full bg-[#1e1e1e] text-gray-100 mb-1 p-2 focus:outline-none focus:ring-0 focus:border-transparent"
-          placeholder="Enter description here..."
-          value={note?.description || ''}
-          onChange={(e) => onNoteUpdate({ ...note, description: e.target.value })}
-        />
+      <input
+        type="text"
+        className="title-input w-full bg-[#1e1e1e] text-gray-100 text-xl font-bold mb-1 p-2 focus:outline-none focus:ring-0 focus:border-transparent"
+        placeholder="Enter title here..."
+        value={note?.title || ''}
+        onChange={(e) => {
+          const updatedNote = { ...note, title: e.target.value };
+          onNoteUpdate(updatedNote);
+          updateJournal(note.id, { title: e.target.value }).catch(console.error);
+        }}
+      />
+      <input
+        type="text"
+        className="description-input w-full bg-[#1e1e1e] text-gray-100 mb-1 p-2 focus:outline-none focus:ring-0 focus:border-transparent"
+        placeholder="Enter description here..."
+        value={note?.description || ''}
+        onChange={(e) => {
+          const updatedNote = { ...note, description: e.target.value };
+          onNoteUpdate(updatedNote);
+          updateJournal(note.id, { description: e.target.value }).catch(console.error);
+        }}
+      />
+
+
       </div>
       <EditorContent editor={editor} />
       <style>{`

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { login, register } from '../services/api';
 
 export default function AuthPage({ onAuthSuccess }) {
+  const navigate = useNavigate();
   const [isRegistering, setIsRegistering] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
@@ -21,7 +23,8 @@ export default function AuthPage({ onAuthSuccess }) {
       const response = isRegistering
         ? await register(formData)
         : await login({ email: formData.email, password: formData.password });
-      onAuthSuccess(response);
+
+      onAuthSuccess(response);       // Update parent state
     } catch (err) {
       setError(err.message || 'Something went wrong');
     }

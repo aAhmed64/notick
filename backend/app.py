@@ -6,23 +6,29 @@ from routes.auth_routes import auth_bp
 from models import db
 import os
 from dotenv import load_dotenv
+from flask_jwt_extended import JWTManager
 
 load_dotenv()
 
 app = Flask(__name__)
 
-# Database configuration: use PostgreSQL from Neon via .env
+# Configure app BEFORE extensions
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
-app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", "dev-secret-key")
+app.config['JWT_SECRET_KEY'] = os.environ.get("JWT_SECRET_KEY", "super-secret")
 
-# Configure CORS
-CORS(app, 
+# Optional (for sessions if used elsewhere)
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+
+# CORS config (for JWT, no need for supports_credentials)
+CORS(app,
      origins=[
          "http://localhost:5173",
          "https://notick-silk.vercel.app",
-         "https://*.vercel.app",
-         "https://*.ngrok-free.app"
+         "https://ba6f-154-236-138-220.ngrok-free.app"
      ],
      supports_credentials=True,
      methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -30,18 +36,19 @@ CORS(app,
      expose_headers=["Content-Type", "Authorization"],
      max_age=600)
 
-# Initialize extensions
+
+# Init extensions
 db.init_app(app)
+jwt = JWTManager(app)
 
 # Register Blueprints
 app.register_blueprint(main_bp)
 app.register_blueprint(auth_bp)
 
-# Create tables (run once or conditionally)
+# Create DB tables if they don't exist
 with app.app_context():
     db.create_all()
 
-# Run the app
+# Run server
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
-
