@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from routes.main_routes import main_bp
@@ -50,12 +50,6 @@ app.register_blueprint(auth_bp)
 with app.app_context():
     db.create_all()
     
-def logout():
-    if request.method == "OPTIONS":
-        return '', 200  # CORS preflight response
-
-    # No real backend action needed — client deletes JWT from localStorage
-    return jsonify({"message": "Logged out successfully"}), 200
 # Run server
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
