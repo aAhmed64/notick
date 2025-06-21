@@ -91,3 +91,9 @@ def get_current_user():
     except Exception as e:
         print("Error in get_current_user:", str(e))
         return jsonify({"error": "Server error", "details": str(e)}), 500
+
+@auth_bp.route("/api/logout", methods=["POST", "OPTIONS"])
+@jwt_required()
+def logout():
+    # You don't need to do much for JWT logout unless you're using token blacklisting
+    return jsonify({"message": "Logged out successfully"}), 200

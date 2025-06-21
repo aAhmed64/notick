@@ -29,7 +29,7 @@ CORS(app,
          "http://localhost:5173",
          "https://notick-silk.vercel.app",
          "https://d502-62-139-62-144.ngrok-free.app",
-         "https://notick-frontend.onrender.com"
+         "https://notick.onrender.com"
      ],
      supports_credentials=True,
      methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -49,7 +49,14 @@ app.register_blueprint(auth_bp)
 # Create DB tables if they don't exist
 with app.app_context():
     db.create_all()
+    
+def logout():
+    if request.method == "OPTIONS":
+        return '', 200  # CORS preflight response
 
+    # No real backend action needed — client deletes JWT from localStorage
+    return jsonify({"message": "Logged out successfully"}), 200
 # Run server
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=True, host='0.0.0.0', port=port)

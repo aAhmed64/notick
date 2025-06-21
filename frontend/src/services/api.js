@@ -1,4 +1,4 @@
-const API_URL = 'https://d502-62-139-62-144.ngrok-free.app';
+const API_URL = 'https://notick.onrender.com';
 const handleResponse = async (response) => {
   if (!response.ok) {
     // This is a robust way to get the error message from the server's JSON response
@@ -54,7 +54,6 @@ export async function createJournal(data) {
     throw error;
   }
 }
-// =======================================================
 
 export async function updateJournal(id, data) {
   try {
@@ -108,10 +107,22 @@ export const register = async (userData) => {
 };
 
 export const logout = async () => {
-  const response = await fetchWithConfig(`${API_URL}/api/logout`, {
-    method: 'POST',
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API_URL}/api/logout`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    credentials: "include"
   });
-  return handleResponse(response);
+
+  if (!res.ok) {
+    throw new Error("Failed to logout");
+  }
+
+  return await res.json();
 };
 
 
