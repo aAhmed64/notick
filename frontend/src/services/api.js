@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'https://notick.onrender.com';
+const API_URL = 'https://d502-62-139-62-144.ngrok-free.app';
 const handleResponse = async (response) => {
   if (!response.ok) {
     // This is a robust way to get the error message from the server's JSON response
@@ -125,8 +125,7 @@ export const getCurrentUser = async () => {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
-      },
-      credentials: 'include',
+      }
     });
 
     console.log('Response status:', res.status);

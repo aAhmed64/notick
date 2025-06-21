@@ -4,6 +4,15 @@ import json
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 main_bp = Blueprint("main", __name__)  # <- Make sure you register this in your app
+from flask_cors import CORS
+
+main_bp = Blueprint("main", __name__)
+CORS(main_bp, supports_credentials=True, origins=[
+    "http://localhost:5173",
+    "https://notick-silk.vercel.app",
+    "https://6929-62-139-62-144.ngrok-free.app",
+    "https://notick-frontend.onrender.com"
+])
 
 @main_bp.route('/api/journals', methods=['GET'])
 @jwt_required()
@@ -87,7 +96,6 @@ def send_ai_message(journal_id):
 
     conversation.append({'role': 'user', 'content': user_message})
 
-    # Replace this with real AI logic
     ai_response = f"AI Reply to: {user_message}"
     conversation.append({'role': 'ai', 'content': ai_response})
 

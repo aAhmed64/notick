@@ -6,7 +6,12 @@ from flask_cors import CORS
 
 auth_bp = Blueprint("auth", __name__)
 
-# Register Route
+CORS(auth_bp, supports_credentials=True, origins=[
+    "http://localhost:5173",
+    "https://notick-silk.vercel.app",
+    "https://6929-62-139-62-144.ngrok-free.app",
+    "https://notick-frontend.onrender.com"
+])
 @auth_bp.route("/api/register", methods=["POST"])
 def register():
     try:
@@ -38,7 +43,6 @@ def register():
     except Exception as e:
         print("Unexpected error during registration:", str(e))
         return jsonify({"error": "Server error", "details": str(e)}), 500
-
 
 # Login Route
 @auth_bp.route("/api/login", methods=["POST"])
@@ -77,7 +81,6 @@ def get_current_user():
         user_id = get_jwt_identity()
         print("JWT identity:", user_id)
         
-        # Convert string ID to integer for database query
         user = User.query.get(int(user_id))
         if not user:
             print("User not found for ID:", user_id)

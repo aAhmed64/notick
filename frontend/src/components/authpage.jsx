@@ -24,7 +24,7 @@ export default function AuthPage({ onAuthSuccess }) {
         ? await register(formData)
         : await login({ email: formData.email, password: formData.password });
 
-      onAuthSuccess(response);       // Update parent state
+      onAuthSuccess(response);
     } catch (err) {
       setError(err.message || 'Something went wrong');
     }
